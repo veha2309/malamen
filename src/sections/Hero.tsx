@@ -2,7 +2,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ArrowDown } from 'lucide-react'
 import { useRef } from 'react'
-import { contact, links } from '../data/site'
+import { contact } from '../data/site'
 import { ActionLink } from '../components/ActionLink'
 
 export function Hero() {
@@ -27,12 +27,12 @@ export function Hero() {
           <h2>Come for dinner.<br /><em>Stay for the night.</em></h2>
           <p>A contemporary dining and bar experience in South Delhi—made for slow lunches, cocktails and nights worth staying for.</p>
           <div className="button-row">
-            <ActionLink href="#reserve" tone="light">Reserve a table</ActionLink>
-            <ActionLink href={links.officialMenu} target="_blank" rel="noreferrer" tone="outline">Explore the menu</ActionLink>
+            <ActionLink href="/reserve" tone="light">Reserve a table</ActionLink>
+            <ActionLink href="/menu" tone="outline">Explore the menu</ActionLink>
           </div>
         </div>
         <div className="hero-meta"><span>{contact.shortAddress}</span><span>{contact.hours}</span></div>
-        <a href="#experience" className="scroll-cue" aria-label="Scroll to the experience"><ArrowDown size={15} /><span>Discover</span></a>
+        <a href="#discover" className="scroll-cue" aria-label="Discover Malamen"><ArrowDown size={15} /><span>Discover</span></a>
       </div>
     </section>
   )

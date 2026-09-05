@@ -2,20 +2,21 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
+import { Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
 import { MobileBar } from './components/MobileBar'
 import { SHOW_DEMO_BADGE, contact } from './data/site'
 import { useSmoothScroll } from './hooks/useSmoothScroll'
-import { Hero } from './sections/Hero'
-import { DayNight } from './sections/DayNight'
-import { Food } from './sections/Food'
-import { Nightlife } from './sections/Nightlife'
-import { MenuPreview } from './sections/MenuPreview'
-import { SocialProof } from './sections/SocialProof'
-import { Events } from './sections/Events'
-import { Gallery } from './sections/Gallery'
-import { ReserveLocation } from './sections/ReserveLocation'
-import { Footer } from './sections/Footer'
+import { RouteReset } from './components/RouteReset'
+import { PageTransition } from './components/PageTransition'
+import { HomePage } from './pages/HomePage'
+import { ExperiencePage } from './pages/ExperiencePage'
+import { MenuPage } from './pages/MenuPage'
+import { EventsPage } from './pages/EventsPage'
+import { GalleryPage } from './pages/GalleryPage'
+import { AboutPage } from './pages/AboutPage'
+import { ReservePage } from './pages/ReservePage'
+import { NotFoundPage } from './pages/NotFoundPage'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -41,8 +42,18 @@ function App() {
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     <Header />
     {SHOW_DEMO_BADGE && <div className="demo-badge">Concept redesign</div>}
-    <main id="main"><Hero /><DayNight /><Food /><Nightlife /><MenuPreview /><SocialProof /><Events /><Gallery /><ReserveLocation /></main>
-    <Footer />
+    <RouteReset />
+    <PageTransition />
+    <main id="main" className="route-stage"><Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/experience" element={<ExperiencePage />} />
+      <Route path="/menu" element={<MenuPage />} />
+      <Route path="/events" element={<EventsPage />} />
+      <Route path="/gallery" element={<GalleryPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/reserve" element={<ReservePage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes></main>
     <MobileBar />
   </div>
 }

@@ -68,7 +68,7 @@ export const reviewSource: ReviewSource = {
 }
 
 export const navItems = [
-  ['Experience', '#experience'], ['Menu', '#menu'], ['Events', '#events'], ['Gallery', '#gallery'], ['About', '#about'],
+  ['Experience', '/experience'], ['Menu', '/menu'], ['Events', '/events'], ['Gallery', '/gallery'], ['About', '/about'],
 ] as const
 
 export function whatsappLink(message: string) {
