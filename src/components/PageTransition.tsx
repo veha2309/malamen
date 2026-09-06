@@ -39,6 +39,7 @@ export function PageTransition() {
         navigate(destination)
         return
       }
+      const mobile = window.matchMedia('(max-width: 767px)').matches
 
       transitioning.current = true
       const progress = overlay.current?.querySelector('.transition-progress')
@@ -50,14 +51,25 @@ export function PageTransition() {
 
       label.current.textContent = destinationNames[url.pathname]
       gsap.killTweensOf([overlay.current, progress, label.current, '.route-stage > *'])
-      gsap.set(overlay.current, { display: 'grid', pointerEvents: 'auto', autoAlpha: 0 })
+      gsap.set(overlay.current, mobile
+        ? { display: 'grid', pointerEvents: 'auto', autoAlpha: 1, yPercent: 100 }
+        : { display: 'grid', pointerEvents: 'auto', autoAlpha: 0, yPercent: 0 })
       gsap.set(progress, { scaleX: 0 })
       gsap.set(label.current, { autoAlpha: 0, y: 8 })
-      gsap.timeline({ onComplete: () => navigate(destination) })
-        .to('.route-stage > *', { autoAlpha: .3, scale: .996, filter: 'blur(3px)', duration: .24, ease: 'power2.in' }, 0)
-        .to(overlay.current, { autoAlpha: 1, duration: .3, ease: 'power2.out' }, 0)
-        .to(label.current, { autoAlpha: 1, y: 0, duration: .22, ease: 'power2.out' }, .08)
-        .to(progress, { scaleX: 1, duration: .42, ease: 'power2.inOut' }, .04)
+      const timeline = gsap.timeline({ onComplete: () => navigate(destination) })
+      if (mobile) {
+        timeline
+          .to('.route-stage > *', { autoAlpha: .72, duration: .18, ease: 'power1.out' }, 0)
+          .to(overlay.current, { yPercent: 0, duration: .5, ease: 'power3.inOut' }, 0)
+          .to(label.current, { autoAlpha: 1, y: 0, duration: .2, ease: 'power2.out' }, .22)
+          .to(progress, { scaleX: 1, duration: .32, ease: 'power2.inOut' }, .16)
+      } else {
+        timeline
+          .to('.route-stage > *', { autoAlpha: .3, scale: .996, filter: 'blur(3px)', duration: .24, ease: 'power2.in' }, 0)
+          .to(overlay.current, { autoAlpha: 1, duration: .3, ease: 'power2.out' }, 0)
+          .to(label.current, { autoAlpha: 1, y: 0, duration: .22, ease: 'power2.out' }, .08)
+          .to(progress, { scaleX: 1, duration: .42, ease: 'power2.inOut' }, .04)
+      }
     }
 
     document.addEventListener('click', onClick, true)
@@ -67,23 +79,35 @@ export function PageTransition() {
   useLayoutEffect(() => {
     const progress = overlay.current?.querySelector('.transition-progress')
     if (transitioning.current && overlay.current && progress && label.current) {
-      gsap.set('.route-stage > *', { autoAlpha: .15, scale: 1.004, filter: 'blur(2px)' })
-      gsap.timeline({
+      const mobile = window.matchMedia('(max-width: 767px)').matches
+      gsap.set('.route-stage > *', mobile
+        ? { autoAlpha: 0, y: 8 }
+        : { autoAlpha: .15, scale: 1.004, filter: 'blur(2px)' })
+      const timeline = gsap.timeline({
         onComplete: () => {
           transitioning.current = false
-          if (overlay.current) gsap.set(overlay.current, { display: 'none', pointerEvents: 'none' })
+          if (overlay.current) gsap.set(overlay.current, { display: 'none', pointerEvents: 'none', clearProps: 'transform' })
           gsap.set(progress, { scaleX: 0 })
           gsap.set('.route-stage > *', { clearProps: 'opacity,visibility,transform,filter' })
         },
       })
-        .to(label.current, { autoAlpha: 0, y: -5, duration: .16, ease: 'power2.in' }, 0)
-        .to(overlay.current, { autoAlpha: 0, duration: .42, ease: 'power2.inOut' }, .08)
-        .to('.route-stage > *', { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: .48, ease: 'power3.out' }, .06)
+      if (mobile) {
+        timeline
+          .to(label.current, { autoAlpha: 0, y: -5, duration: .14, ease: 'power1.in' }, 0)
+          .to(overlay.current, { yPercent: -100, duration: .52, ease: 'power3.inOut' }, .08)
+          .to('.route-stage > *', { autoAlpha: 1, y: 0, duration: .38, ease: 'power2.out' }, .18)
+      } else {
+        timeline
+          .to(label.current, { autoAlpha: 0, y: -5, duration: .16, ease: 'power2.in' }, 0)
+          .to(overlay.current, { autoAlpha: 0, duration: .42, ease: 'power2.inOut' }, .08)
+          .to('.route-stage > *', { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: .48, ease: 'power3.out' }, .06)
+      }
       return
     }
 
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      gsap.fromTo('.route-stage > *', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .55, ease: 'power3.out', clearProps: 'opacity,visibility,transform' })
+      const mobile = window.matchMedia('(max-width: 767px)').matches
+      gsap.fromTo('.route-stage > *', { autoAlpha: 0, y: mobile ? 6 : 14 }, { autoAlpha: 1, y: 0, duration: mobile ? .38 : .55, ease: 'power3.out', clearProps: 'opacity,visibility,transform' })
     }
   }, [location.key])
 

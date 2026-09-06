@@ -645,6 +645,8 @@ em { font-weight: 400; color: var(--brass); }
 
 /* Mobile cover art direction */
 @media (max-width: 767px) {
+  .page-transition { will-change: transform; transform: translateZ(0); backface-visibility: hidden; }
+  .route-stage > * { backface-visibility: hidden; }
   .hero, .page-hero, .menu-page-hero { isolation: isolate; }
   .hero-image, .page-hero > img, .menu-page-hero > img {
     filter: saturate(.86) contrast(1.06) brightness(.82);
