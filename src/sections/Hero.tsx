@@ -13,7 +13,11 @@ export function Hero() {
     tl.from('.hero-image', { scale: 1.08, duration: 1.8 })
       .from('.hero-word span', { yPercent: 110, stagger: 0.07, duration: 1.1 }, 0.2)
       .from('.hero-copy > *', { y: 25, opacity: 0, stagger: 0.12, duration: 0.8 }, 0.65)
-    gsap.to('.hero-image', { yPercent: 10, ease: 'none', scrollTrigger: { trigger: ref.current, start: 'top top', end: 'bottom top', scrub: true } })
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 768px)', () => {
+      gsap.to('.hero-image', { yPercent: 10, ease: 'none', scrollTrigger: { trigger: ref.current, start: 'top top', end: 'bottom top', scrub: true } })
+    })
+    return () => mm.revert()
   }, { scope: ref })
 
   return (

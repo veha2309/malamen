@@ -1,5 +1,7 @@
 import { Menu, MessageCircle, X } from 'lucide-react'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
 import { NavLink, useLocation } from 'react-router-dom'
 import { navItems, whatsappLink } from '../data/site'
 import { ActionLink } from './ActionLink'
@@ -49,7 +51,17 @@ export function Header() {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  return (
+  const mobileMenu = (
+    <div ref={menuRef} id="mobile-menu" className={`mobile-menu ${open ? 'is-open' : ''}`}>
+      <p className="eyebrow">From lunch to late</p>
+      <nav aria-label="Mobile navigation">
+        {navItems.map(([label, href], i) => <NavLink key={href} to={href} onClick={() => closeMenu()} style={{ '--nav-index': i } as CSSProperties}><span>0{i + 1}</span>{label}</NavLink>)}
+      </nav>
+      <ActionLink href="/reserve" tone="light" onClick={() => closeMenu()}>Find your table</ActionLink>
+    </div>
+  )
+
+  return <>
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <Brand />
       <nav className="desktop-nav" aria-label="Primary navigation">
@@ -60,13 +72,7 @@ export function Header() {
         <ActionLink href="/reserve" tone="light" arrow={false}>Reserve a table</ActionLink>
         <button ref={toggleRef} className="menu-toggle" onClick={() => open ? closeMenu() : setOpen(true)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? 'Close menu' : 'Open menu'}>{open ? <X /> : <Menu />}</button>
       </div>
-      <div ref={menuRef} id="mobile-menu" className={`mobile-menu ${open ? 'is-open' : ''}`}>
-        <p className="eyebrow">From lunch to late</p>
-        <nav aria-label="Mobile navigation">
-          {navItems.map(([label, href], i) => <NavLink key={href} to={href} onClick={() => closeMenu()}><span>0{i + 1}</span>{label}</NavLink>)}
-        </nav>
-        <ActionLink href="/reserve" tone="light" onClick={() => closeMenu()}>Find your table</ActionLink>
-      </div>
     </header>
-  )
+    {createPortal(mobileMenu, document.body)}
+  </>
 }

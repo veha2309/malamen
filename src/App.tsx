@@ -17,6 +17,7 @@ import { GalleryPage } from './pages/GalleryPage'
 import { AboutPage } from './pages/AboutPage'
 import { ReservePage } from './pages/ReservePage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { MobileMotion } from './components/MobileMotion'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -44,6 +45,7 @@ function App() {
     {SHOW_DEMO_BADGE && <div className="demo-badge">Concept redesign</div>}
     <RouteReset />
     <PageTransition />
+    <MobileMotion />
     <main id="main" className="route-stage"><Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/experience" element={<ExperiencePage />} />
